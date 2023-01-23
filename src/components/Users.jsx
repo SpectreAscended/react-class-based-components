@@ -3,12 +3,6 @@ import User from './User';
 
 import classes from './Users.module.css';
 
-const DUMMY_USERS = [
-  { id: 'u1', name: 'Max' },
-  { id: 'u2', name: 'Manuel' },
-  { id: 'u3', name: 'Julie' },
-];
-
 // LEC With class based components state always must be called state, and it MUST be an object.  We always put all state in this component in this one object.  We edit state by calling this.setState({}) which also takes an object.  We then pass in the state and value we want to change.  We do not need to manage other existing state, it will not be overwritten like it would be in functional components.
 
 class Users extends Component {
@@ -30,7 +24,7 @@ class Users extends Component {
   render() {
     const usersList = (
       <ul>
-        {DUMMY_USERS.map(user => (
+        {this.props.users.map(user => (
           <User key={user.id} name={user.name} />
         ))}
       </ul>
