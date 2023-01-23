@@ -1,14 +1,13 @@
 import { Fragment, useState, useEffect, Component } from 'react';
 import Users from './Users';
 import classes from './UserFinder.module.css';
+import UsersContext from '../store/usersContext';
 
-const DUMMY_USERS = [
-  { id: 'u1', name: 'Max' },
-  { id: 'u2', name: 'Manuel' },
-  { id: 'u3', name: 'Julie' },
-];
+// instead of using useContext, we set a static property to the Context. "static contextType = OurContext"  We can only set the static context once per component. If you would need to use a second context you would have to find some other work around, like wrapping your component in another component.  Access your context by using "this.context.users"(to access users from our context)
 
 class UserFinder extends Component {
+  static contextType = UsersContext;
+
   constructor() {
     super();
     this.state = {
@@ -20,7 +19,7 @@ class UserFinder extends Component {
   componentDidMount() {
     // useEffect(() => {}, [])
     // Send http request...
-    this.setState({ filteredUsers: DUMMY_USERS });
+    this.setState({ filteredUsers: this.context.users });
   }
 
   searchChangeHandler(event) {
@@ -31,7 +30,7 @@ class UserFinder extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchTerm !== this.state.searchTerm) {
       this.setState({
-        filteredUsers: DUMMY_USERS.filter(user =>
+        filteredUsers: this.context.users.filter(user =>
           user.name.includes(this.state.searchTerm)
         ),
       });
