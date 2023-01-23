@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect, Component } from 'react';
 import Users from './Users';
 import classes from './UserFinder.module.css';
 import UsersContext from '../store/usersContext';
+import ErrorBoundary from './ErrorBoundary';
 
 // instead of using useContext, we set a static property to the Context. "static contextType = OurContext"  We can only set the static context once per component. If you would need to use a second context you would have to find some other work around, like wrapping your component in another component.  Access your context by using "this.context.users"(to access users from our context)
 
@@ -23,11 +24,12 @@ class UserFinder extends Component {
   }
 
   searchChangeHandler(event) {
-    // useEffect(() => {}, [dependencies])
     this.setState({ searchTerm: event.target.value });
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // useEffect(() => {}, [dependencies])
+    // This if statement is how we can tell if our dependency changed.  If we don't include this if check we will create an infinite loop.
     if (prevState.searchTerm !== this.state.searchTerm) {
       this.setState({
         filteredUsers: this.context.users.filter(user =>
@@ -43,7 +45,9 @@ class UserFinder extends Component {
         <div className={classes.finder}>
           <input type="search" onChange={this.searchChangeHandler.bind(this)} />
         </div>
-        <Users users={this.state.filteredUsers} />
+        <ErrorBoundary>
+          <Users users={this.state.filteredUsers} />
+        </ErrorBoundary>
       </Fragment>
     );
   }
